@@ -23,7 +23,8 @@
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            localStorage.setItem('username', username); localStorage.setItem('password', password);
+            localStorage.setItem('username', username); 
+            localStorage.setItem('password', password);
             if (username === 'admin' && password === 'admin123') {
                 alert('Login successful!');
             } else {
