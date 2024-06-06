@@ -23,16 +23,28 @@
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            localStorage.setItem('username', username); 
-            localStorage.setItem('password', password);
+            sessionStorage.setItem('username', username); 
+            sessionStorage.setItem('password', password);
             if (username === 'admin' && password === 'admin123') {
                 alert('Login successful!');
             } else {
                 alert('Invalid credentials!');
             }
-            document.body.innerHTML += `<p>Welcome, ${username}!</p>`;
+            document.body.appendChild(document.createTextNode(`Welcome, ${sanitize(username)}!`));
+        }
+
+        function sanitize(string) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#x27;',
+                "/": '&#x2F;',
+            };
+            const reg = /[&<>"'/]/ig;
+            return string.replace(reg, (match)=>(map[match]));
         }
     </script>
 </body>
-
 </html>
