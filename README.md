@@ -40,3 +40,39 @@ function login() {
     document.body.innerHTML += `<p>Welcome, ${username}!</p>`;
 }
 ```
+
+### InnerHTML - Cross-Site Scripting
+
+Another important vulnerability in this application is the use of the `.innerHTML` method. This function not only renders but also executes HTML in the browser, including JavaScript blocks.
+In a real application this can be used by a malicious actor to inject more than just basic HTML or code. There are certain pentesting tools like BeEF that will assist a treat actor to mantain access in a user session using this technique.
+
+```js
+    document.body.innerHTML += `<p>Welcome, ${username}!</p>`;
+```
+
+To solve this issue we can do several things.
+1. Use `.textContent` instead of `.innerHTML` is our intend is just to render text. If the user still tries to inject HTML it won't be executed, but it will be rendered anyway.
+2. Parse and verify the user input before render it. This can be done with several Javascript libraries.
+3. Use other DOM manipulation methods.
+
+```js
+// DOM manipulation
+const newParagraph = document.createElement('p');
+const sanitizedUserInput = sanitize(username)
+newParagraph.appendChild(document.createTextNode(`Welcome, ${sanitizedUserInput}!`));
+
+// Function to sanitize user input
+function sanitize(string) {
+  const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      "/": '&#x2F;',
+  };
+  const reg = /[&<>"'/]/ig;
+  return string.replace(reg, (match)=>(map[match]));
+}
+```
+
